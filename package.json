@@ -1,0 +1,10 @@
+{
+    "scripts": {
+        "client": "npm run dev --prefix project",
+        "server": "node server/server.js",
+        "dev": "concurrently \"npm run server\" \"npm run client\""
+    },
+    "dependencies": {
+        "pg": "^8.16.3"
+    }
+}
