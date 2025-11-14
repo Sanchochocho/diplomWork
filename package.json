@@ -5,6 +5,8 @@
         "dev": "concurrently \"npm run server\" \"npm run client\""
     },
     "dependencies": {
+        "@supabase/supabase-js": "^2.81.1",
+        "dotenv": "^17.2.3",
         "pg": "^8.16.3"
     }
 }
