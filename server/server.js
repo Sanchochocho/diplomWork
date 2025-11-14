@@ -1,15 +1,24 @@
-import supabase from './database.js';
+import express from "express";
+import cors from "cors";
+import { supabase } from "./database.js";
 
-async function getUsers() {
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+app.get("/users", async (req, res) => {
   const { data, error } = await supabase
-    .from('users')
-    .select('*');
+  .from("users")
+  .select("*");
 
   if (error) {
-    console.error('Ошибка запроса:', error);
-  } else {
-    console.log('Данные:', data);
+    console.error("Ошибка Supabase:", error);
+    return res.status(500).json({ error: error.message });
   }
-}
 
-getUsers();
+  res.json(data);
+});
+
+app.listen(5000, () => {
+  console.log("Server running on http://localhost:5000");
+});
