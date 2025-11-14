@@ -1,14 +1,9 @@
-const {Pool} = require('pg');
-const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'culinary',
-    password: 'Sanzhar123',
-    port: 5432,
-});
+import 'dotenv/config';
+import { createClient } from '@supabase/supabase-js';
 
-pool.connect()
-  .then(() => console.log("Подключено к PostgreSQL"))
-  .catch(err => console.error("Ошибка подключения:", err));
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+);
 
-module.exports = pool;
+export default supabase;
