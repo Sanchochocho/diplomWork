@@ -8,7 +8,7 @@ app.use(express.json());
 
 app.get("/users", async (req, res) => {
   const { data, error } = await supabase
-  .from("users")
+  .from("recipes")
   .select("*");
 
   if (error) {
