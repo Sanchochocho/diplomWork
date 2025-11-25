@@ -9,7 +9,16 @@ app.use(express.json());
 app.get("/users", async (req, res) => {
   const { data, error } = await supabase
   .from("recipes")
-  .select("*");
+  .select(`*, categories(id, name), 
+    recipe_ingredients!recipe_ingredients_recipe_id_fkey (
+      quantity,
+      ingredient_id,
+      ingredients (*)
+    )`);
+console.log(data);
+
+
+
 
   if (error) {
     console.error("Ошибка Supabase:", error);
