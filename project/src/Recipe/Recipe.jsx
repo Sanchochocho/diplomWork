@@ -1,77 +1,172 @@
 import './Recipe.css';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RecipeInfo from "../RecipeInfo/RecipeInfo";
+import Search from "../Search/Search";
 
-const Recipe = ({ recipes }) => {
+const Recipe = ({ recipes, currentUser, categories }) => {
     const [selectedRecipe, setSelectedRecipe] = useState(null);
+    const [filteredRecipes, setFilteredRecipes] = useState(recipes);
+    const [favorites, setFavorites] = useState([]);
+    const [filter, setFilter] = useState("all");
 
-    // Пагинация
+    useEffect(() => {
+        setFilteredRecipes(recipes);
+    }, [recipes]);
+
+    useEffect(() => {
+        if (!currentUser) {
+            setFavorites([]);
+            return;
+        }
+
+        console.log("GET favorites for:", currentUser.id);
+
+        fetch("http://localhost:5000/favorites")
+            .then(res => res.json())
+            .then(data => {
+                console.log("Favorites:", data);
+                setFavorites(data.filter(f => f.user_id === currentUser.id));
+            })
+            .catch(err => console.error(err));
+    }, [currentUser]);
+
+    const handleSearch = (query) => {
+        if (!query.trim()) {
+            setFilteredRecipes(recipes);
+            return;
+        }
+
+        const lowerQuery = query.toLowerCase();
+
+        const results = recipes.filter(recipe => {
+            const titleMatch = recipe.title.toLowerCase().includes(lowerQuery);
+            const ingredientMatch = recipe.recipe_ingredients?.some(item =>
+                item.ingredients.name.toLowerCase().includes(lowerQuery)
+            );
+
+            return titleMatch || ingredientMatch;
+        });
+
+        setFilteredRecipes(results);
+        setCurrentPage(1);
+    };
+
+    const handleAddToFavorites = async (recipeId, e) => {
+        e.stopPropagation();
+
+        if (!currentUser) {
+            alert("Сначала войдите в аккаунт");
+            return;
+        }
+
+        const favPayload = {
+            user_id: currentUser.id,
+            recipe_id: recipeId
+        };
+
+        try {
+            const res = await fetch("http://localhost:5000/favorites", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(favPayload)
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert(data.message || "Ошибка при добавлении в избранное");
+                return;
+            }
+
+            alert("Добавлено в избранное");
+        } catch (err) {
+            console.error(err);
+            alert("Ошибка сервера при добавлении");
+        }
+    };
+
+    useEffect(() => {
+        if (filter === "all") {
+            setFilteredRecipes(recipes);
+        } else {
+            setFilteredRecipes(recipes.filter(r => r.category_id === filter));
+        }
+    }, [filter, recipes]);
+
+
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10; // Сколько карточек на странице
+    const itemsPerPage = 10;
 
-    // Индексы для текущей страницы
-    const lastItemIndex = currentPage * itemsPerPage;
-    const firstItemIndex = lastItemIndex - itemsPerPage;
-
-    // Карточки, которые будут отображаться
-    const currentRecipes = recipes.slice(firstItemIndex, lastItemIndex);
-
-    // Количество страниц
-    const totalPages = Math.ceil(recipes.length / itemsPerPage);
+    const totalPages = Math.ceil(filteredRecipes.length / itemsPerPage);
+    const currentRecipes = filteredRecipes.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
 
     return (
         <>
+            <Search onSearch={handleSearch} onFilterSelect={setFilter} categories={categories}/>
+
             <div className="recipes-wrapper">
-                {currentRecipes.map((recipe, index) => (
-                    <div className="recipe-card" key={index}>
+                {currentRecipes.map(recipe => (
+                    <div
+                        className="recipe-card"
+                        key={recipe.id}
+                        onClick={() => setSelectedRecipe(recipe)}
+                    >
                         <img
                             src={recipe.image_url}
-                            alt={recipe.name}
+                            alt={recipe.title}
                             className="recipe-image"
                         />
 
                         <div className="recipe-content">
                             <h2 className="recipe-title">{recipe.title}</h2>
-
                             <p className="recipe-category">Категория: {recipe.categories?.name}</p>
-
                             <p className="recipe-description">{recipe.description}</p>
 
                             <button
-                                onClick={() => setSelectedRecipe(recipe)}
                                 className="recipe-button"
+                                onClick={(e) => handleAddToFavorites(recipe.id, e)}
                             >
-                                Подробнее →
+                                Добавить в избранное
                             </button>
                         </div>
                     </div>
                 ))}
             </div>
 
-            {/* PAGINATION BUTTONS */}
-            <div className="pagination">
-                <button
-                    disabled={currentPage === 1}
-                    onClick={() => setCurrentPage(prev => prev - 1)}
-                >
-                    ← Назад
-                </button>
-
-                <span>{currentPage} / {totalPages}</span>
-
-                <button
-                    disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage(prev => prev + 1)}
-                >
-                    Вперёд →
-                </button>
-            </div>
+            {filteredRecipes.length === 0 && (
+                <p className="no-results">Ничего не найдено</p>
+            )}
 
             {selectedRecipe && (
                 <RecipeInfo
                     recipe={selectedRecipe}
                     onClose={() => setSelectedRecipe(null)}
                 />
+            )}
+
+            {filteredRecipes.length > 0 && (
+                <div className="pagination">
+                    <button
+                        className="pagination-button"
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage(currentPage - 1)}
+                    >
+                        ← Назад
+                    </button>
+
+                    <span className="pagination-info">{currentPage} / {totalPages || 1}</span>
+
+                    <button
+                        className="pagination-button"
+                        disabled={currentPage === totalPages}
+                        onClick={() => setCurrentPage(currentPage + 1)}
+                    >
+                        Вперёд →
+                    </button>
+                </div>
             )}
         </>
     );

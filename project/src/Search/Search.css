@@ -1,41 +1,110 @@
-.search-container {
+.search-line {
   display: flex;
+  gap: 10px;
   align-items: center;
-  margin-top: 30px;
-  margin-left: 40%;
-  gap: 8px;
-  width: 100%;
-  max-width: 450px;
-  background: #fff;
-  border: 1px solid #e3e3e3;
-  border-radius: 8px;
-  padding: 6px 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  transition: 0.2s;
+  flex-wrap: wrap;
+  padding: 10px;
+  justify-content: center;
 }
 
-.search-container:hover {
-  border-color: #ff5722;
+.dropdown-wrapper {
+  position: relative;
+}
+
+.filter-button {
+  width: 180px;
+  height: 45px;
+  background: #ff5722;
+  color: white;
+  font-size: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 0 6px rgba(255, 140, 0, 0.6);
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 180px;
+  max-height: 200px;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 2px solid #ff5722;
+  border-radius: 12px;
+  z-index: 50;
+  box-shadow: 0 0 10px rgba(255, 140, 0, 0.8);
+}
+
+.filter-item {
+  padding: 12px;
+  color: #ff5722;
+  font-size: 15px;
+  border-bottom: 1px solid rgba(255,140,0,0.3);
+  cursor: pointer;
+  transition: 0.2s;
+  text-align: center;
+}
+
+.filter-item:hover {
+  background: #ff5722;
+  color: #fff;
+}
+
+.filter-item:last-child {
+  border-bottom: none;
+}
+
+.search-container {
+  display: flex;
 }
 
 .search-input {
-  flex: 1;
-  border: none;
+  width: 260px;
+  height: 45px;
+  padding-left: 14px;
+  border: 2px solid #ff5722;
+  border-right: none;
+  border-radius: 12px 0 0 12px;
+  background: #ffffff;
   outline: none;
-  font-size: 20px;
+  color: #000000;
+  font-size: 16px;
+  box-shadow: 0 0 6px rgba(255,140,0,0.5);
 }
 
 .search-button {
+  width: 50px;
+  height: 45px;
+  border: 2px solid #ff5722;
+  border-left: none;
+  border-radius: 0 12px 12px 0;
   background: #ff5722;
-  border: none;
+  cursor: pointer;
   color: white;
   font-size: 18px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
+  box-shadow: 0 0 6px rgba(255,140,0,0.6);
   transition: 0.2s;
 }
 
-.search-button:hover {
-  background: #e64a19;
+
+@media (max-width: 600px) {
+  .filter-button,
+  .filter-dropdown {
+    width: 140px;
+  }
+
+  .search-input {
+    width: 200px;
+    font-size: 14px;
+  }
+
+  .search-button {
+    width: 40px;
+  }
+
+  .search-line {
+    gap: 6px;
+  }
 }

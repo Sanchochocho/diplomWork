@@ -1,4 +1,3 @@
-/* Контейнер со всеми карточками */
 .recipes-wrapper {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -8,7 +7,6 @@
   margin-right: 15%;
 }
 
-/* Карточка */
 .recipe-card {
   background: #fff;
   border-radius: 14px;
@@ -22,19 +20,16 @@
   box-shadow: 0 6px 18px rgba(0,0,0,0.18);
 }
 
-/* Картинка */
 .recipe-image {
   width: 100%;
   height: 180px;
   object-fit: cover;
 }
 
-/* Контент */
 .recipe-content {
   padding: 16px;
 }
 
-/* Название */
 .recipe-title {
   margin: 0 0 8px;
   font-size: 20px;
@@ -42,21 +37,18 @@
   color: #333;
 }
 
-/* Категория */
 .recipe-category {
   margin: 0 0 12px;
   font-size: 14px;
   color: #777;
 }
 
-/* Описание */
 .recipe-description {
   font-size: 15px;
   color: #444;
   margin-bottom: 16px;
 }
 
-/* Кнопка */
 .recipe-button {
   width: 100%;
   padding: 10px 0;
@@ -95,7 +87,7 @@
 }
 
 .pagination button:hover {
-  background: #e64a19;              /* чуть темнее при наведении */
+  background: #e64a19;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }

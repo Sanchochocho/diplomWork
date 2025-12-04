@@ -73,3 +73,18 @@
 .register:hover {
   background: #e64a19;
 }
+
+.logout-button {
+  background: #fff;
+  color: #ff5722;
+  border: 2px solid #ff5722;
+  padding: 8px 15px;
+  border-radius: 10px;
+  font-size: 18px;
+  transition: 0.2s;
+}
+
+.logout-button:hover {
+  background: #ff5722;
+  color: rgb(255, 255, 255);
+}

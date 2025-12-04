@@ -6,7 +6,6 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      // Любой запрос к /users на фронтенде будет проксирован на порт 5000
       '/users': {
         target: 'http://localhost:5000',
         changeOrigin: true,
