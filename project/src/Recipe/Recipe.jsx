@@ -19,12 +19,9 @@ const Recipe = ({ recipes, currentUser, categories }) => {
             return;
         }
 
-        console.log("GET favorites for:", currentUser.id);
-
         fetch("http://localhost:5000/favorites")
             .then(res => res.json())
             .then(data => {
-                console.log("Favorites:", data);
                 setFavorites(data.filter(f => f.user_id === currentUser.id));
             })
             .catch(err => console.error(err));
