@@ -2,12 +2,14 @@ import { useState } from "react";
 import { supabase } from '../../supabaseClient';
 import bcrypt from "bcryptjs";
 import "./Register.css";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
+    const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -45,6 +47,10 @@ const Register = () => {
             setEmail("");
             setPassword("");
         }
+
+        setTimeout(() => {
+            navigate("/login");
+        }, 800);
     };
 
     return (

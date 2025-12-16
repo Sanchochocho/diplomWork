@@ -5,6 +5,7 @@
   flex-wrap: wrap;
   padding: 10px;
   justify-content: center;
+  margin-top: 30px;
 }
 
 .dropdown-wrapper {
@@ -65,27 +66,12 @@
   height: 45px;
   padding-left: 14px;
   border: 2px solid #ff5722;
-  border-right: none;
-  border-radius: 12px 0 0 12px;
+  border-radius: 12px;
   background: #ffffff;
   outline: none;
   color: #000000;
   font-size: 16px;
   box-shadow: 0 0 6px rgba(255,140,0,0.5);
-}
-
-.search-button {
-  width: 50px;
-  height: 45px;
-  border: 2px solid #ff5722;
-  border-left: none;
-  border-radius: 0 12px 12px 0;
-  background: #ff5722;
-  cursor: pointer;
-  color: white;
-  font-size: 18px;
-  box-shadow: 0 0 6px rgba(255,140,0,0.6);
-  transition: 0.2s;
 }
 
 

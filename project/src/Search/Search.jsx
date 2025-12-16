@@ -32,16 +32,17 @@ const Search = ({ onSearch, onFilterSelect, categories }) => {
 
   return (
     <div className="search-line">
-      <form className="search-container" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          className="search-input"
-          placeholder="Поиск рецептов..."
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
-        <button type="submit" className="search-button">🔍</button>
-      </form>
+
+      <input
+        type="text"
+        className="search-input"
+        placeholder="Поиск рецептов..."
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value);
+          onSearch(e.target.value);
+        }}
+      />
 
       <div className="dropdown-wrapper" ref={dropdownRef}>
         <button className="filter-button" onClick={() => setDropdownOpen(!dropdownOpen)}>
@@ -51,9 +52,9 @@ const Search = ({ onSearch, onFilterSelect, categories }) => {
         {dropdownOpen && (
           <div className="filter-dropdown">
             <div className="filter-scroll">
-              <div className="filter-item" onClick={(e)=>handleSelect({id:"all", name:"Все"}, e)}>Все</div>
+              <div className="filter-item" onClick={(e) => handleSelect({ id: "all", name: "Все" }, e)}>Все</div>
               {categories.map(cat => (
-                <div className="filter-item" key={cat.id} onClick={(e)=>handleSelect(cat, e)}>
+                <div className="filter-item" key={cat.id} onClick={(e) => handleSelect(cat, e)}>
                   {cat.name}
                 </div>
               ))}

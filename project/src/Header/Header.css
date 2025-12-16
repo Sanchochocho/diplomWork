@@ -6,7 +6,7 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .header-container {
@@ -19,10 +19,9 @@
 }
 
 .logo {
-  font-size: 42px;
+  font-size: 36px;
   font-weight: bold;
   color: #ff5722;
-  text-decoration: none;
 }
 
 .nav {
@@ -34,16 +33,16 @@
   text-decoration: none;
   font-size: 20px;
   color: #333;
-  transition: 0.2s;
 }
 
-.nav-link:hover {
+.nav-link:active {
   color: #ff5722;
 }
 
 .auth-buttons {
   display: flex;
   gap: 10px;
+  align-items: center;
 }
 
 .btn {
@@ -83,8 +82,72 @@
   font-size: 18px;
   transition: 0.2s;
 }
-
 .logout-button:hover {
   background: #ff5722;
-  color: rgb(255, 255, 255);
+  color: #fff;
+}
+
+.profile-link {
+  font-size: 18px;
+  color: #333;
+  text-decoration: none;
+  margin-right: 10px;
+}
+.profile-link:active {
+  color: #ff5722;
+}
+
+.burger {
+  display: none;
+  font-size: 30px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  background: white;
+  padding: 15px;
+  border-top: 1px solid #ddd;
+  gap: 12px;
+}
+
+.mobile-menu a,
+.mobile-menu button.logout-mobile {
+  padding: 12px 0;
+  font-size: 18px;
+  text-align: left;
+  border: none;
+  background: none;
+  width: 100%;
+  color: #333;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 10px;
+  background-color: #ff5722;
+  color: #fff;
+  text-decoration: none;
+}
+
+
+@media (max-width: 768px) {
+
+  .logo {
+    font-size: 28px;
+  }
+
+  .nav,
+  .auth-buttons {
+    display: none;
+  }
+
+  .burger {
+    display: block;
+  }
+
+  .mobile-menu {
+    display: flex;
+  }
 }

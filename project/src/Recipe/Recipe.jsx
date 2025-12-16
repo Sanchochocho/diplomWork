@@ -2,16 +2,16 @@ import './Recipe.css';
 import { useState, useEffect } from "react";
 import RecipeInfo from "../RecipeInfo/RecipeInfo";
 import Search from "../Search/Search";
+import { ThreeDot } from "react-loading-indicators";
 
-const Recipe = ({ recipes, currentUser, categories }) => {
+const Recipe = ({ recipes, currentUser, categories, loading }) => {
     const [selectedRecipe, setSelectedRecipe] = useState(null);
-    const [filteredRecipes, setFilteredRecipes] = useState(recipes);
     const [favorites, setFavorites] = useState([]);
     const [filter, setFilter] = useState("all");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
-    useEffect(() => {
-        setFilteredRecipes(recipes);
-    }, [recipes]);
 
     useEffect(() => {
         if (!currentUser) {
@@ -27,26 +27,29 @@ const Recipe = ({ recipes, currentUser, categories }) => {
             .catch(err => console.error(err));
     }, [currentUser]);
 
+    const filteredRecipes = recipes.filter(recipe => {
+        //фильтр по категории
+        const categoryMatch =
+            filter === "all" || recipe.category_id === filter;
+
+        //поиск
+        const query = searchQuery.toLowerCase();
+        const titleMatch = recipe.title.toLowerCase().includes(query);
+        const ingredientMatch = recipe.recipe_ingredients?.some(item =>
+            item.ingredients.name.toLowerCase().includes(query)
+        );
+
+        const searchMatch = query === "" || titleMatch || ingredientMatch;
+
+        return categoryMatch && searchMatch;
+    });
+
+
     const handleSearch = (query) => {
-        if (!query.trim()) {
-            setFilteredRecipes(recipes);
-            return;
-        }
-
-        const lowerQuery = query.toLowerCase();
-
-        const results = recipes.filter(recipe => {
-            const titleMatch = recipe.title.toLowerCase().includes(lowerQuery);
-            const ingredientMatch = recipe.recipe_ingredients?.some(item =>
-                item.ingredients.name.toLowerCase().includes(lowerQuery)
-            );
-
-            return titleMatch || ingredientMatch;
-        });
-
-        setFilteredRecipes(results);
+        setSearchQuery(query);
         setCurrentPage(1);
     };
+
 
     const handleAddToFavorites = async (recipeId, e) => {
         e.stopPropagation();
@@ -82,17 +85,11 @@ const Recipe = ({ recipes, currentUser, categories }) => {
         }
     };
 
-    useEffect(() => {
-        if (filter === "all") {
-            setFilteredRecipes(recipes);
-        } else {
-            setFilteredRecipes(recipes.filter(r => r.category_id === filter));
-        }
-    }, [filter, recipes]);
+    const handleCategoryChange = (catId) => {
+        setFilter(catId);
+        setCurrentPage(1);
+    };
 
-
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
 
     const totalPages = Math.ceil(filteredRecipes.length / itemsPerPage);
     const currentRecipes = filteredRecipes.slice(
@@ -102,40 +99,54 @@ const Recipe = ({ recipes, currentUser, categories }) => {
 
     return (
         <>
-            <Search onSearch={handleSearch} onFilterSelect={setFilter} categories={categories}/>
+            <Search onSearch={handleSearch} onFilterSelect={handleCategoryChange} categories={categories} />
 
-            <div className="recipes-wrapper">
-                {currentRecipes.map(recipe => (
-                    <div
-                        className="recipe-card"
-                        key={recipe.id}
-                        onClick={() => setSelectedRecipe(recipe)}
-                    >
-                        <img
-                            src={recipe.image_url}
-                            alt={recipe.title}
-                            className="recipe-image"
-                        />
+            {loading && (
+                <div style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: "80px"
+                }}>
+                    <ThreeDot color="#ff5722" size="medium" />
+                </div>
+            )}
 
-                        <div className="recipe-content">
-                            <h2 className="recipe-title">{recipe.title}</h2>
-                            <p className="recipe-category">Категория: {recipe.categories?.name}</p>
-                            <p className="recipe-description">{recipe.description}</p>
-
-                            <button
-                                className="recipe-button"
-                                onClick={(e) => handleAddToFavorites(recipe.id, e)}
-                            >
-                                Добавить в избранное
-                            </button>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {filteredRecipes.length === 0 && (
+            {!loading && filteredRecipes.length === 0 && (
                 <p className="no-results">Ничего не найдено</p>
             )}
+
+            {!loading && filteredRecipes.length > 0 && (
+                <div className="recipes-wrapper">
+                    {currentRecipes.map(recipe => (
+                        <div
+                            className="recipe-card"
+                            key={recipe.id}
+                            onClick={() => setSelectedRecipe(recipe)}
+                        >
+                            <img
+                                src={recipe.image_url}
+                                alt={recipe.title}
+                                className="recipe-image"
+                            />
+
+                            <div className="recipe-content">
+                                <h2 className="recipe-title">{recipe.title}</h2>
+                                <p className="recipe-category">Категория: {recipe.categories?.name}</p>
+                                <p className="recipe-description">{recipe.description}</p>
+
+                                <button
+                                    className="recipe-button"
+                                    onClick={(e) => handleAddToFavorites(recipe.id, e)}
+                                >
+                                    Добавить в избранное
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+
 
             {selectedRecipe && (
                 <RecipeInfo
