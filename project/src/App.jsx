@@ -15,7 +15,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  fetch("http://localhost:5000/recipes")
+  fetch("https://diplomwork.onrender.com/recipes")
     .then(res => res.json())
     .then(data => {
       setRecipes(data);
@@ -28,7 +28,7 @@ function App() {
 }, []);
 
   useEffect(() => {
-    fetch("http://localhost:5000/users")
+    fetch("https://diplomwork.onrender.com/users")
       .then(res => res.json())
       .then(data => setUsers(data))
       .catch(err => console.error(err));
@@ -44,7 +44,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:5000/categories")
+    fetch("https://diplomwork.onrender.com/categories")
       .then(res => res.json())
       .then(data => setCategories(data))
       .catch(err => console.error(err));

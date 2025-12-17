@@ -19,7 +19,7 @@ const Recipe = ({ recipes, currentUser, categories, loading }) => {
             return;
         }
 
-        fetch("http://localhost:5000/favorites")
+        fetch("https://diplomwork.onrender.com/favorites")
             .then(res => res.json())
             .then(data => {
                 setFavorites(data.filter(f => f.user_id === currentUser.id));
@@ -65,7 +65,7 @@ const Recipe = ({ recipes, currentUser, categories, loading }) => {
         };
 
         try {
-            const res = await fetch("http://localhost:5000/favorites", {
+            const res = await fetch("https://diplomwork.onrender.com/favorites", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(favPayload)
