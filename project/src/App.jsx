@@ -7,6 +7,7 @@ import Favorites from "./Favorites/Favorites.jsx";
 import Register from "./Auth/Register/Register.jsx";
 import Login from "./Auth/Login/Login.jsx";
 import Profile from "./Profile/Profile.jsx";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
   const [recipes, setRecipes] = useState([]);
@@ -15,7 +16,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  fetch("https://diplomwork.onrender.com/recipes")
+  fetch(`${API_URL}/recipes`)
     .then(res => res.json())
     .then(data => {
       setRecipes(data);
@@ -28,7 +29,7 @@ function App() {
 }, []);
 
   useEffect(() => {
-    fetch("https://diplomwork.onrender.com/users")
+    fetch(`${API_URL}/users`)
       .then(res => res.json())
       .then(data => setUsers(data))
       .catch(err => console.error(err));
@@ -44,7 +45,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetch("https://diplomwork.onrender.com/categories")
+    fetch(`${API_URL}/categories`)
       .then(res => res.json())
       .then(data => setCategories(data))
       .catch(err => console.error(err));

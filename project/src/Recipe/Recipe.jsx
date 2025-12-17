@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import RecipeInfo from "../RecipeInfo/RecipeInfo";
 import Search from "../Search/Search";
 import { ThreeDot } from "react-loading-indicators";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Recipe = ({ recipes, currentUser, categories, loading }) => {
     const [selectedRecipe, setSelectedRecipe] = useState(null);
@@ -19,7 +20,7 @@ const Recipe = ({ recipes, currentUser, categories, loading }) => {
             return;
         }
 
-        fetch("https://diplomwork.onrender.com/favorites")
+        fetch(`${API_URL}/favorites`)
             .then(res => res.json())
             .then(data => {
                 setFavorites(data.filter(f => f.user_id === currentUser.id));
@@ -65,7 +66,7 @@ const Recipe = ({ recipes, currentUser, categories, loading }) => {
         };
 
         try {
-            const res = await fetch("https://diplomwork.onrender.com/favorites", {
+            const res = await fetch(`${API_URL}/favorites`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(favPayload)
